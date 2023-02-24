@@ -1,0 +1,55 @@
+# we can rebuild each time or remove the build tag
+# docker-compose up --build -d
+
+# takes down the service and destroys volumes
+# docker-compose down -v
+
+# or just take down the service
+# docker-compsose down
+
+version: "3.8"
+services:
+  mongodb:
+    image: "mongo"
+    volumes: 
+      - data:/data/db
+    env_file: 
+      - ./env/mongo.env
+    # environment: 
+    #   SOMETHING=secret
+    #   SOME_THING=secret
+
+  backend:
+    build: ./backend
+    # build:
+    #   context: ./backend
+    #   dockerfile: Dockerfile
+    #   args:
+    #     something: 123
+    ports:
+      - '80:80'
+    volumes: 
+      - logs:/app/logs
+      - ./backend:/app
+      - /app/node_modules
+    env_file: 
+      - ./env/backend.env
+    depends_on:
+      - mongodb
+  frontend:
+    build: ./frontend
+    ports: 
+      - '3000:3000'
+    volumes: 
+      - ./frontend/src:/app/src
+
+    depends_on: 
+      - backend
+
+
+
+# named volumes need to be specified at the services level
+# this doesnt apply to anonymous or bind volumes
+volumes:
+  data:
+  logs:
