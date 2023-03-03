@@ -1,0 +1,25 @@
+apiVersion: /apps/v1
+kind: Deployment
+metadata:
+  name: second-app-deployment
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: second-app
+
+  template:
+    metadata:
+      labels:
+        app: second-app
+    spec:
+      containers:
+      - name: second-node
+        image: mmat30/kub-first-app
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: <Port>

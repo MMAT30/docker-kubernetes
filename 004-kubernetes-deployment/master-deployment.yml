@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: backend
+
+spec:
+  selector:
+    app: second-app
+
+  ports:
+    - protocol: "TCP"
+      port: 80
+      targetPort: 8080
+
+  types: LoadBalancer
+---
+apiVersion: /apps/v1
+kind: Deployment
+metadata:
+  name: second-app-deployment
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: second-app
+
+  template:
+    metadata:
+      labels:
+        app: second-app
+    spec:
+      containers:
+      - name: second-node
+        image: mmat30/kub-first-app
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: <Port>
