@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rust-app-deployment
+spec:
+  selector:
+    matchLabels:
+      app: rust-app-deployment
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: rust-app-deployment
+    spec:
+      containers:
+      - name: test-rust
+        image: test-rust
+        imagePullPolicy: Never  
+        resources:
+          limits:
+            cpu: "1"
+            memory: "512Mi"
+          requests:
+            cpu: "0.5"
+            memory: "256Mi"
+        ports:
+        - containerPort: 8000
+
